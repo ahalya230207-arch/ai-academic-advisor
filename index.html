@@ -7,121 +7,82 @@
 <title>AI Academic Advisor</title>
 <style>
 :root {
-  --bg: #0b1020;
-  --panel: #151d32;
-  --line: #293550;
-  --text: #f4f7ff;
-  --muted: #a5b2cc;
-  --blue: #6d8cff;
-  --green: #43d9a3;
+  --bg:#0b1020; --panel:#151d32; --line:#293550;
+  --text:#f4f7ff; --muted:#a5b2cc; --blue:#6d8cff;
+  --green:#43d9a3; --orange:#ffbd80;
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
+* { box-sizing:border-box; }
+body { margin:0; font-family:Arial,sans-serif; background:var(--bg); color:var(--text); }
 header {
-  padding: 22px 6%;
-  background: #111a2d;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  padding:22px 6%; background:#111a2d; border-bottom:1px solid var(--line);
+  display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
 }
-.brand { font-size: 21px; font-weight: bold; }
-.brand span { color: var(--blue); }
-header small { color: var(--muted); }
-main { max-width: 1150px; margin: auto; padding: 28px 18px; }
-h1 { margin-bottom: 8px; font-size: 30px; }
-h2 { font-size: 18px; }
-p { color: var(--muted); line-height: 1.6; }
-.tag {
-  display: inline-block; background: #253459; color: #b8c7ff;
-  padding: 7px 12px; border-radius: 20px; font-size: 12px;
+.brand { font-size:22px; font-weight:bold; }
+.brand span { color:var(--blue); }
+header small { color:var(--muted); }
+main { max-width:1150px; margin:auto; padding:28px 18px; }
+h1 { font-size:30px; margin-bottom:8px; }
+h2 { font-size:18px; }
+p { color:var(--muted); line-height:1.6; }
+.tag { display:inline-block; background:#253459; color:#b8c7ff; padding:7px 12px; border-radius:20px; font-size:12px; }
+.grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-top:20px; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:15px; padding:20px; min-width:0; }
+.metric { font-size:29px; font-weight:bold; margin-top:12px; }
+.metric-label { color:var(--muted); font-size:13px; }
+label { display:block; margin:13px 0 7px; color:#d9e2f5; font-size:13px; }
+input,select {
+  width:100%; padding:12px; border-radius:8px; border:1px solid var(--line);
+  background:#0e1628; color:white; font-size:14px;
 }
-.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
-.panel {
-  background: var(--panel); border: 1px solid var(--line);
-  border-radius: 15px; padding: 20px; min-width: 0;
-}
-.metric { font-size: 29px; font-weight: bold; margin-top: 12px; }
-.metric-label { color: var(--muted); font-size: 13px; }
-label { display: block; margin: 13px 0 7px; color: #d9e2f5; font-size: 13px; }
-input, select {
-  width: 100%; padding: 12px; border-radius: 8px;
-  border: 1px solid var(--line); background: #0e1628;
-  color: white; font-size: 14px;
-}
-button {
-  padding: 12px 15px; border: 0; border-radius: 8px;
-  cursor: pointer; background: var(--blue); color: white;
-  font-weight: bold; margin-top: 14px;
-}
-button:hover { filter: brightness(1.12); }
-.secondary { background: #293550; }
-.full { width: 100%; }
-.subject {
-  padding: 13px 0; border-bottom: 1px solid var(--line);
-}
-.subject:last-child { border-bottom: 0; }
-.subject-head { display: flex; justify-content: space-between; gap: 8px; }
-.bar { height: 7px; background: #28344d; border-radius: 9px; margin-top: 10px; overflow: hidden; }
-.fill { height: 100%; background: var(--green); border-radius: 9px; }
-.weak { color: #ffbd80; }
-.good { color: var(--green); }
-.result {
-  margin-top: 14px; padding: 14px; border-radius: 9px;
-  background: #0e1628; line-height: 1.7;
-}
-.task { display: flex; gap: 10px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--line); }
-.task input { width: auto; margin-top: 4px; }
-.task.done span { text-decoration: line-through; color: var(--muted); }
-footer { text-align: center; padding: 25px; color: var(--muted); font-size: 12px; }
+button { padding:12px 15px; border:0; border-radius:8px; cursor:pointer; background:var(--blue); color:white; font-weight:bold; margin-top:12px; }
+button:hover { filter:brightness(1.12); }
+.secondary { background:#293550; }
+.full { width:100%; }
+.subject { padding:13px 0; border-bottom:1px solid var(--line); }
+.subject-head { display:flex; justify-content:space-between; gap:8px; }
+.bar { height:7px; background:#28344d; border-radius:9px; margin-top:10px; overflow:hidden; }
+.fill { height:100%; background:var(--green); border-radius:9px; transition:width .3s; }
+.weak { color:var(--orange); }
+.good { color:var(--green); }
+.result { margin-top:14px; padding:14px; border-radius:9px; background:#0e1628; line-height:1.7; }
+.task { display:flex; gap:10px; align-items:start; padding:12px 0; border-bottom:1px solid var(--line); }
+.task input { width:auto; margin-top:4px; }
+.task.done span { text-decoration:line-through; color:var(--muted); }
+.notice { font-size:12px; color:var(--muted); }
+footer { text-align:center; padding:25px; color:var(--muted); font-size:12px; }
 @media(max-width:700px) {
-  .grid { grid-template-columns: 1fr; }
-  .two { grid-template-columns: 1fr; }
-  h1 { font-size: 25px; }
+  .grid,.two { grid-template-columns:1fr; }
+  h1 { font-size:25px; }
 }
 </style>
 </head>
 <body>
 <header>
   <div class="brand">✦ Academic<span>AI</span></div>
-  <small>PERSONALIZED LEARNING • STUDENT EDITION</small>
+  <small>PERSONALIZED LEARNING · STUDENT EDITION</small>
 </header>
 
 <main>
-  <span class="tag">AI ACADEMIC ADVISOR · DEMO</span>
+  <span class="tag">AI ACADEMIC ADVISOR · HACKATHON DEMO</span>
   <h1 id="greeting">Your learning, your plan.</h1>
-  <p>Understand your performance, find improvement areas, and build a study plan that adapts to your needs.</p>
+  <p>Understand your performance, identify areas to improve, and build a study plan around your needs.</p>
 
   <section class="grid">
-    <div class="panel">
-      <div class="metric" id="average">—</div>
-      <div class="metric-label">Average subject mark</div>
-    </div>
-    <div class="panel">
-      <div class="metric" id="strongCount">—</div>
-      <div class="metric-label">Subjects at 75% or above</div>
-    </div>
-    <div class="panel">
-      <div class="metric" id="progress">0%</div>
-      <div class="metric-label">Study tasks completed</div>
-    </div>
+    <div class="panel"><div class="metric" id="average">—</div><div class="metric-label">Average subject mark</div></div>
+    <div class="panel"><div class="metric" id="strongCount">0</div><div class="metric-label">Subjects at 75% or above</div></div>
+    <div class="panel"><div class="metric" id="progress">0%</div><div class="metric-label">Study tasks completed</div></div>
   </section>
 
   <section class="two">
     <div class="panel">
-      <h2>01 / Student profile</h2>
+      <h2>01 / Student Profile</h2>
       <label for="student">Student name</label>
-      <input id="student" placeholder="Enter your name" value="Student">
+      <input id="student" placeholder="Enter student name" value="Student">
       <label for="hours">Available study hours per day</label>
       <input id="hours" type="number" min="1" max="12" value="3">
+      <label for="attendance">Attendance (%)</label>
+      <input id="attendance" type="number" min="0" max="100" value="85">
       <label for="exam">Next exam date</label>
       <input id="exam" type="date">
       <button class="full" onclick="saveProfile()">Save profile</button>
@@ -129,28 +90,29 @@ footer { text-align: center; padding: 25px; color: var(--muted); font-size: 12px
     </div>
 
     <div class="panel">
-      <h2>02 / Add subject marks</h2>
+      <h2>02 / Add Subject Marks</h2>
       <label for="subjectName">Subject name</label>
       <input id="subjectName" placeholder="e.g. Computer Networks">
       <label for="mark">Mark (0–100)</label>
       <input id="mark" type="number" min="0" max="100" placeholder="e.g. 55">
-      <button class="full" onclick="addSubject()">Add subject</button>
-      <p>Enter your actual marks, or use the sample subjects below to test the demo.</p>
+      <button class="full" onclick="addSubject()">Add or update subject</button>
       <button class="secondary full" onclick="loadSample()">Load sample data</button>
+      <button class="secondary full" onclick="clearData()">Clear all student data</button>
+      <p class="notice">Sample data is fictional. Use it to demonstrate the features.</p>
     </div>
   </section>
 
   <section class="two">
     <div class="panel">
-      <h2>03 / Performance analysis</h2>
-      <div id="subjects"><p>Add subjects to begin your analysis.</p></div>
+      <h2>03 / Performance Analysis</h2>
+      <div id="subjects"><p>Add subjects or load sample data to begin.</p></div>
       <button class="full" onclick="analyze()">Analyze my performance</button>
       <div id="analysis" class="result" hidden></div>
     </div>
 
     <div class="panel">
-      <h2>04 / Adaptive study planner</h2>
-      <p>The planner prioritizes lower marks and distributes your available study time.</p>
+      <h2>04 / Adaptive Study Planner</h2>
+      <p>Study time is allocated with more time for subjects with lower marks.</p>
       <button class="full" onclick="generatePlan()">Generate my study plan</button>
       <div id="plan"><p>Your personalized plan will appear here.</p></div>
       <button class="secondary full" onclick="resetTasks()">Reset task completion</button>
@@ -158,69 +120,166 @@ footer { text-align: center; padding: 25px; color: var(--muted); font-size: 12px
   </section>
 
   <section class="panel" style="margin-top:20px">
-    <h2>05 / Progress tracker</h2>
-    <p>Mark tasks as complete to update your progress score.</p>
+    <h2>05 / Progress Tracker</h2>
     <div class="bar"><div class="fill" id="progressBar" style="width:0%"></div></div>
     <div id="taskSummary" class="metric-label" style="margin-top:10px">No study tasks yet.</div>
+    <p class="notice">Your data is stored in this browser on this device. It is not shared between users or devices.</p>
   </section>
 </main>
 
-<footer>AI Academic Advisor · Student Project Prototype · Demo recommendations are not official academic assessments.</footer>
+<footer>AI Academic Advisor · Student Project Prototype · Recommendations are educational guidance, not official academic assessments.</footer>
 
 <script>
+const STORAGE_KEY = 'academicAdvisorDataV2';
 let subjects = [];
 let tasks = [];
 
+function el(id) { return document.getElementById(id); }
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[c]);
+}
+
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      subjects, tasks,
+      student:el('student').value,
+      hours:el('hours').value,
+      attendance:el('attendance').value,
+      exam:el('exam').value
+    }));
+  } catch (e) {
+    console.error('Unable to save data in this browser.', e);
+  }
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (Array.isArray(data.subjects)) {
+      subjects = data.subjects.filter(s =>
+        s && typeof s.name === 'string' &&
+        Number.isFinite(Number(s.mark)) &&
+        Number(s.mark) >= 0 && Number(s.mark) <= 100
+      ).map(s => ({name:s.name, mark:Number(s.mark)}));
+    }
+    if (Array.isArray(data.tasks)) {
+      tasks = data.tasks.filter(t =>
+        t && typeof t.name === 'string' &&
+        Number.isFinite(Number(t.minutes)) && Number(t.minutes) >= 0
+      ).map(t => ({
+        name:t.name, minutes:Number(t.minutes), done:Boolean(t.done)
+      }));
+    }
+    el('student').value = data.student || 'Student';
+    el('hours').value = data.hours || 3;
+    el('attendance').value = data.attendance ?? 85;
+    el('exam').value = data.exam || '';
+    el('greeting').textContent = 'Your learning, ' + el('student').value + '.';
+  } catch (e) {
+    console.error('Saved data could not be read.', e);
+  }
+}
+
 function saveProfile() {
-  const name = document.getElementById('student').value.trim() || 'Student';
-  const hours = Number(document.getElementById('hours').value);
-  if (!Number.isFinite(hours) || hours < 1 || hours > 12) {
+  const name = el('student').value.trim() || 'Student';
+  const hours = Number(el('hours').value);
+  const attendanceText = el('attendance').value;
+  const attendance = Number(attendanceText);
+
+  if (el('hours').value === '' || !Number.isFinite(hours) || hours < 1 || hours > 12) {
     alert('Enter study time between 1 and 12 hours.');
     return;
   }
-  document.getElementById('greeting').textContent = 'Your learning, ' + name + '.';
-  const box = document.getElementById('profileMessage');
+  if (attendanceText === '' || !Number.isFinite(attendance) || attendance < 0 || attendance > 100) {
+    alert('Enter attendance between 0 and 100.');
+    return;
+  }
+
+  el('student').value = name;
+  el('greeting').textContent = 'Your learning, ' + name + '.';
+  const box = el('profileMessage');
   box.hidden = false;
-  box.textContent = 'Profile updated. Available study time: ' + hours + ' hour(s) per day.';
+  const exam = el('exam').value;
+  const days = exam ? Math.ceil((new Date(exam + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000) : null;
+  box.textContent = 'Profile saved. Attendance: ' + attendance + '%.' +
+    (days === null ? '' : days < 0 ? ' The exam date is in the past.' :
+      days === 0 ? ' Your exam is today!' : ' Days until exam: ' + days + '.');
+  saveData();
 }
 
 function addSubject() {
-  const name = document.getElementById('subjectName').value.trim();
-  const mark = Number(document.getElementById('mark').value);
-  if (!name || document.getElementById('mark').value === '' ||
-      !Number.isFinite(mark) || mark < 0 || mark > 100) {
+  const name = el('subjectName').value.trim();
+  const markText = el('mark').value;
+  const mark = Number(markText);
+
+  if (!name || markText === '' || !Number.isFinite(mark) || mark < 0 || mark > 100) {
     alert('Enter a subject name and a mark between 0 and 100.');
     return;
   }
+
   const existing = subjects.find(s => s.name.toLowerCase() === name.toLowerCase());
   if (existing) existing.mark = mark;
   else subjects.push({name, mark});
-  document.getElementById('subjectName').value = '';
-  document.getElementById('mark').value = '';
+
+  el('subjectName').value = '';
+  el('mark').value = '';
   renderSubjects();
+  el('analysis').hidden = true;
+  saveData();
 }
 
 function loadSample() {
   subjects = [
-    {name:'Computer Networks',mark:48},
-    {name:'Big Data Analytics',mark:62},
-    {name:'Database Management',mark:82},
-    {name:'Java Programming',mark:71}
+    {name:'Computer Networks', mark:48},
+    {name:'Big Data Analytics', mark:62},
+    {name:'Database Management', mark:82},
+    {name:'Java Programming', mark:71}
   ];
   tasks = [];
+  el('student').value = 'Ahalya Demo';
+  el('hours').value = 3;
+  el('attendance').value = 85;
+  el('exam').value = '2026-11-15';
+  el('greeting').textContent = 'Your learning, Ahalya Demo.';
+  el('analysis').hidden = true;
+  el('profileMessage').hidden = true;
+  el('plan').innerHTML = '<p>Sample data loaded. Generate your study plan.</p>';
   renderSubjects();
-  document.getElementById('analysis').hidden = true;
-  document.getElementById('plan').innerHTML = '<p>Sample data loaded. Generate a new study plan.</p>';
+  updateProgress();
+  saveData();
+}
+
+function clearData() {
+  if (!confirm('Clear the saved profile, subjects, and study tasks on this browser?')) return;
+  subjects = [];
+  tasks = [];
+  localStorage.removeItem(STORAGE_KEY);
+  el('student').value = 'Student';
+  el('hours').value = 3;
+  el('attendance').value = 85;
+  el('exam').value = '';
+  el('greeting').textContent = 'Your learning, your plan.';
+  el('analysis').hidden = true;
+  el('profileMessage').hidden = true;
+  el('plan').innerHTML = '<p>Your personalized plan will appear here.</p>';
+  renderSubjects();
   updateProgress();
 }
 
 function renderSubjects() {
-  const box = document.getElementById('subjects');
+  const box = el('subjects');
   if (!subjects.length) {
-    box.innerHTML = '<p>Add subjects to begin your analysis.</p>';
+    box.innerHTML = '<p>Add subjects or load sample data to begin.</p>';
     updateMetrics();
     return;
   }
+
   box.innerHTML = subjects.map((s,i) => `
     <div class="subject">
       <div class="subject-head">
@@ -233,23 +292,18 @@ function renderSubjects() {
   updateMetrics();
 }
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  })[c]);
-}
-
 function removeSubject(i) {
   subjects.splice(i,1);
   renderSubjects();
+  el('analysis').hidden = true;
+  saveData();
 }
 
 function updateMetrics() {
   const avg = subjects.length
     ? subjects.reduce((sum,s) => sum + s.mark,0) / subjects.length : null;
-  document.getElementById('average').textContent = avg === null ? '—' : avg.toFixed(1) + '%';
-  document.getElementById('strongCount').textContent =
-    subjects.filter(s => s.mark >= 75).length;
+  el('average').textContent = avg === null ? '—' : avg.toFixed(2) + '%';
+  el('strongCount').textContent = subjects.filter(s => s.mark >= 75).length;
 }
 
 function analyze() {
@@ -257,16 +311,31 @@ function analyze() {
     alert('Add subjects or load sample data first.');
     return;
   }
+
   const sorted = [...subjects].sort((a,b) => a.mark - b.mark);
   const weak = sorted.filter(s => s.mark < 60);
-  const box = document.getElementById('analysis');
+  const attendance = Number(el('attendance').value);
+  const exam = el('exam').value;
+  let deadlineText = '';
+
+  if (exam) {
+    const days = Math.ceil((new Date(exam + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000);
+    deadlineText = days < 0 ? '<br>The entered exam date has passed.' :
+      days === 0 ? '<br>Your exam is today. Prioritize revision and rest.' :
+      '<br>Days until exam: ' + days + '.';
+  }
+
+  const box = el('analysis');
   box.hidden = false;
   box.innerHTML = '<strong>Advisor findings</strong><br>' +
     (weak.length
       ? 'Priority subjects: ' + weak.map(s => escapeHTML(s.name)).join(', ') + '.'
-      : 'No subjects are below 60%. Continue revising your lowest-scoring subjects.') +
-    '<br>Recommended focus: practice questions, review difficult concepts, and take a short self-test.' +
-    '<br><small>These recommendations use your entered marks and simple rules; they are not generated by an external AI model.</small>';
+      : 'No subjects are below 60%. Focus on your lowest-scoring subjects to improve further.') +
+    '<br>Attendance: ' + (Number.isFinite(attendance) && attendance >= 0 && attendance <= 100 ? attendance + '%' : 'Not entered') +
+    (attendance < 75 ? ' — review your institution’s attendance requirements.' : '.') +
+    deadlineText +
+    '<br><br><strong>Suggested action:</strong> Review difficult concepts, solve practice questions, and take a short self-test.' +
+    '<br><small>These findings are generated from entered data using transparent rules, not an external AI model.</small>';
 }
 
 function generatePlan() {
@@ -274,58 +343,91 @@ function generatePlan() {
     alert('Add subjects or load sample data first.');
     return;
   }
-  const hours = Number(document.getElementById('hours').value);
-  if (!Number.isFinite(hours) || hours < 1 || hours > 12) {
+
+  const hoursText = el('hours').value;
+  const hours = Number(hoursText);
+  if (hoursText === '' || !Number.isFinite(hours) || hours < 1 || hours > 12) {
     alert('Enter study time between 1 and 12 hours.');
     return;
   }
+
   const sorted = [...subjects].sort((a,b) => a.mark - b.mark);
   const totalMinutes = hours * 60;
-  const base = Math.floor(totalMinutes / sorted.length);
-  let remaining = totalMinutes;
+  const weights = sorted.map(s => Math.max(10, 100 - s.mark));
+  const weightTotal = weights.reduce((sum,w) => sum + w,0);
+  let allocated = 0;
+
   tasks = sorted.map((s,i) => {
-    const minutes = i === sorted.length - 1 ? remaining : base;
-    remaining -= minutes;
-    return {id:i, name:s.name, minutes, done:false};
+    const minutes = i === sorted.length - 1
+      ? totalMinutes - allocated
+      : Math.floor(totalMinutes * weights[i] / weightTotal);
+    allocated += minutes;
+    return {
+      name:s.name,
+      minutes,
+      done:false
+    };
   });
+
   renderPlan();
+  saveData();
 }
 
 function renderPlan() {
-  const box = document.getElementById('plan');
-  box.innerHTML = tasks.map((t,i) => `
-    <label class="task ${t.done ? 'done' : ''}">
-      <input type="checkbox" ${t.done ? 'checked' : ''}
-        onchange="toggleTask(${i},this.checked)">
-      <span><strong>${escapeHTML(t.name)}</strong><br>
-      ${t.minutes} minutes · ${subjects.find(s => s.name === t.name)?.mark < 60
-        ? 'High priority: revise basics and solve practice questions'
-        : 'Review notes and complete practice questions'}</span>
-    </label>`).join('');
+  const box = el('plan');
+  if (!tasks.length) {
+    box.innerHTML = '<p>Your personalized plan will appear here.</p>';
+    updateProgress();
+    return;
+  }
+
+  box.innerHTML = tasks.map((t,i) => {
+    const subject = subjects.find(s => s.name === t.name);
+    const advice = subject && subject.mark < 60
+      ? 'High priority: revise basics and solve practice questions.'
+      : 'Review notes and complete practice questions.';
+    return `
+      <label class="task ${t.done ? 'done' : ''}">
+        <input type="checkbox" ${t.done ? 'checked' : ''}
+          onchange="toggleTask(${i},this.checked)">
+        <span><strong>${escapeHTML(t.name)}</strong><br>
+        ${t.minutes} minutes · ${advice}</span>
+      </label>`;
+  }).join('');
+
   updateProgress();
 }
 
-function toggleTask(i, checked) {
+function toggleTask(i,checked) {
+  if (!tasks[i]) return;
   tasks[i].done = checked;
   renderPlan();
+  saveData();
 }
 
 function resetTasks() {
   tasks.forEach(t => t.done = false);
   renderPlan();
+  saveData();
 }
 
 function updateProgress() {
   const done = tasks.filter(t => t.done).length;
   const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
-  document.getElementById('progress').textContent = pct + '%';
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('taskSummary').textContent = tasks.length
+  el('progress').textContent = pct + '%';
+  el('progressBar').style.width = pct + '%';
+  el('taskSummary').textContent = tasks.length
     ? done + ' of ' + tasks.length + ' tasks completed (' + pct + '%).'
     : 'No study tasks yet.';
 }
 
+['student','hours','attendance','exam'].forEach(id => {
+  el(id).addEventListener('change',saveData);
+});
+
+loadData();
 renderSubjects();
+renderPlan();
 updateProgress();
 </script>
 </body>
