@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Academic Advisor</title>
+<style>
+:root {
+  --bg: #0b1020;
+  --panel: #151d32;
+  --line: #293550;
+  --text: #f4f7ff;
+  --muted: #a5b2cc;
+  --blue: #6d8cff;
+  --green: #43d9a3;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+header {
+  padding: 22px 6%;
+  background: #111a2d;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.brand { font-size: 21px; font-weight: bold; }
+.brand span { color: var(--blue); }
+header small { color: var(--muted); }
+main { max-width: 1150px; margin: auto; padding: 28px 18px; }
+h1 { margin-bottom: 8px; font-size: 30px; }
+h2 { font-size: 18px; }
+p { color: var(--muted); line-height: 1.6; }
+.tag {
+  display: inline-block; background: #253459; color: #b8c7ff;
+  padding: 7px 12px; border-radius: 20px; font-size: 12px;
+}
+.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 15px; padding: 20px; min-width: 0;
+}
+.metric { font-size: 29px; font-weight: bold; margin-top: 12px; }
+.metric-label { color: var(--muted); font-size: 13px; }
+label { display: block; margin: 13px 0 7px; color: #d9e2f5; font-size: 13px; }
+input, select {
+  width: 100%; padding: 12px; border-radius: 8px;
+  border: 1px solid var(--line); background: #0e1628;
+  color: white; font-size: 14px;
+}
+button {
+  padding: 12px 15px; border: 0; border-radius: 8px;
+  cursor: pointer; background: var(--blue); color: white;
+  font-weight: bold; margin-top: 14px;
+}
+button:hover { filter: brightness(1.12); }
+.secondary { background: #293550; }
+.full { width: 100%; }
+.subject {
+  padding: 13px 0; border-bottom: 1px solid var(--line);
+}
+.subject:last-child { border-bottom: 0; }
+.subject-head { display: flex; justify-content: space-between; gap: 8px; }
+.bar { height: 7px; background: #28344d; border-radius: 9px; margin-top: 10px; overflow: hidden; }
+.fill { height: 100%; background: var(--green); border-radius: 9px; }
+.weak { color: #ffbd80; }
+.good { color: var(--green); }
+.result {
+  margin-top: 14px; padding: 14px; border-radius: 9px;
+  background: #0e1628; line-height: 1.7;
+}
+.task { display: flex; gap: 10px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.task input { width: auto; margin-top: 4px; }
+.task.done span { text-decoration: line-through; color: var(--muted); }
+footer { text-align: center; padding: 25px; color: var(--muted); font-size: 12px; }
+@media(max-width:700px) {
+  .grid { grid-template-columns: 1fr; }
+  .two { grid-template-columns: 1fr; }
+  h1 { font-size: 25px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">✦ Academic<span>AI</span></div>
+  <small>PERSONALIZED LEARNING • STUDENT EDITION</small>
+</header>
+
+<main>
+  <span class="tag">AI ACADEMIC ADVISOR · DEMO</span>
+  <h1 id="greeting">Your learning, your plan.</h1>
+  <p>Understand your performance, find improvement areas, and build a study plan that adapts to your needs.</p>
+
+  <section class="grid">
+    <div class="panel">
+      <div class="metric" id="average">—</div>
+      <div class="metric-label">Average subject mark</div>
+    </div>
+    <div class="panel">
+      <div class="metric" id="strongCount">—</div>
+      <div class="metric-label">Subjects at 75% or above</div>
+    </div>
+    <div class="panel">
+      <div class="metric" id="progress">0%</div>
+      <div class="metric-label">Study tasks completed</div>
+    </div>
+  </section>
+
+  <section class="two">
+    <div class="panel">
+      <h2>01 / Student profile</h2>
+      <label for="student">Student name</label>
+      <input id="student" placeholder="Enter your name" value="Student">
+      <label for="hours">Available study hours per day</label>
+      <input id="hours" type="number" min="1" max="12" value="3">
+      <label for="exam">Next exam date</label>
+      <input id="exam" type="date">
+      <button class="full" onclick="saveProfile()">Save profile</button>
+      <div id="profileMessage" class="result" hidden></div>
+    </div>
+
+    <div class="panel">
+      <h2>02 / Add subject marks</h2>
+      <label for="subjectName">Subject name</label>
+      <input id="subjectName" placeholder="e.g. Computer Networks">
+      <label for="mark">Mark (0–100)</label>
+      <input id="mark" type="number" min="0" max="100" placeholder="e.g. 55">
+      <button class="full" onclick="addSubject()">Add subject</button>
+      <p>Enter your actual marks, or use the sample subjects below to test the demo.</p>
+      <button class="secondary full" onclick="loadSample()">Load sample data</button>
+    </div>
+  </section>
+
+  <section class="two">
+    <div class="panel">
+      <h2>03 / Performance analysis</h2>
+      <div id="subjects"><p>Add subjects to begin your analysis.</p></div>
+      <button class="full" onclick="analyze()">Analyze my performance</button>
+      <div id="analysis" class="result" hidden></div>
+    </div>
+
+    <div class="panel">
+      <h2>04 / Adaptive study planner</h2>
+      <p>The planner prioritizes lower marks and distributes your available study time.</p>
+      <button class="full" onclick="generatePlan()">Generate my study plan</button>
+      <div id="plan"><p>Your personalized plan will appear here.</p></div>
+      <button class="secondary full" onclick="resetTasks()">Reset task completion</button>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:20px">
+    <h2>05 / Progress tracker</h2>
+    <p>Mark tasks as complete to update your progress score.</p>
+    <div class="bar"><div class="fill" id="progressBar" style="width:0%"></div></div>
+    <div id="taskSummary" class="metric-label" style="margin-top:10px">No study tasks yet.</div>
+  </section>
+</main>
+
+<footer>AI Academic Advisor · Student Project Prototype · Demo recommendations are not official academic assessments.</footer>
+
+<script>
+let subjects = [];
+let tasks = [];
+
+function saveProfile() {
+  const name = document.getElementById('student').value.trim() || 'Student';
+  const hours = Number(document.getElementById('hours').value);
+  if (!Number.isFinite(hours) || hours < 1 || hours > 12) {
+    alert('Enter study time between 1 and 12 hours.');
+    return;
+  }
+  document.getElementById('greeting').textContent = 'Your learning, ' + name + '.';
+  const box = document.getElementById('profileMessage');
+  box.hidden = false;
+  box.textContent = 'Profile updated. Available study time: ' + hours + ' hour(s) per day.';
+}
+
+function addSubject() {
+  const name = document.getElementById('subjectName').value.trim();
+  const mark = Number(document.getElementById('mark').value);
+  if (!name || document.getElementById('mark').value === '' ||
+      !Number.isFinite(mark) || mark < 0 || mark > 100) {
+    alert('Enter a subject name and a mark between 0 and 100.');
+    return;
+  }
+  const existing = subjects.find(s => s.name.toLowerCase() === name.toLowerCase());
+  if (existing) existing.mark = mark;
+  else subjects.push({name, mark});
+  document.getElementById('subjectName').value = '';
+  document.getElementById('mark').value = '';
+  renderSubjects();
+}
+
+function loadSample() {
+  subjects = [
+    {name:'Computer Networks',mark:48},
+    {name:'Big Data Analytics',mark:62},
+    {name:'Database Management',mark:82},
+    {name:'Java Programming',mark:71}
+  ];
+  tasks = [];
+  renderSubjects();
+  document.getElementById('analysis').hidden = true;
+  document.getElementById('plan').innerHTML = '<p>Sample data loaded. Generate a new study plan.</p>';
+  updateProgress();
+}
+
+function renderSubjects() {
+  const box = document.getElementById('subjects');
+  if (!subjects.length) {
+    box.innerHTML = '<p>Add subjects to begin your analysis.</p>';
+    updateMetrics();
+    return;
+  }
+  box.innerHTML = subjects.map((s,i) => `
+    <div class="subject">
+      <div class="subject-head">
+        <strong>${escapeHTML(s.name)}</strong>
+        <span class="${s.mark < 60 ? 'weak' : 'good'}">${s.mark}%</span>
+      </div>
+      <div class="bar"><div class="fill" style="width:${s.mark}%"></div></div>
+      <button class="secondary" onclick="removeSubject(${i})">Remove</button>
+    </div>`).join('');
+  updateMetrics();
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[c]);
+}
+
+function removeSubject(i) {
+  subjects.splice(i,1);
+  renderSubjects();
+}
+
+function updateMetrics() {
+  const avg = subjects.length
+    ? subjects.reduce((sum,s) => sum + s.mark,0) / subjects.length : null;
+  document.getElementById('average').textContent = avg === null ? '—' : avg.toFixed(1) + '%';
+  document.getElementById('strongCount').textContent =
+    subjects.filter(s => s.mark >= 75).length;
+}
+
+function analyze() {
+  if (!subjects.length) {
+    alert('Add subjects or load sample data first.');
+    return;
+  }
+  const sorted = [...subjects].sort((a,b) => a.mark - b.mark);
+  const weak = sorted.filter(s => s.mark < 60);
+  const box = document.getElementById('analysis');
+  box.hidden = false;
+  box.innerHTML = '<strong>Advisor findings</strong><br>' +
+    (weak.length
+      ? 'Priority subjects: ' + weak.map(s => escapeHTML(s.name)).join(', ') + '.'
+      : 'No subjects are below 60%. Continue revising your lowest-scoring subjects.') +
+    '<br>Recommended focus: practice questions, review difficult concepts, and take a short self-test.' +
+    '<br><small>These recommendations use your entered marks and simple rules; they are not generated by an external AI model.</small>';
+}
+
+function generatePlan() {
+  if (!subjects.length) {
+    alert('Add subjects or load sample data first.');
+    return;
+  }
+  const hours = Number(document.getElementById('hours').value);
+  if (!Number.isFinite(hours) || hours < 1 || hours > 12) {
+    alert('Enter study time between 1 and 12 hours.');
+    return;
+  }
+  const sorted = [...subjects].sort((a,b) => a.mark - b.mark);
+  const totalMinutes = hours * 60;
+  const base = Math.floor(totalMinutes / sorted.length);
+  let remaining = totalMinutes;
+  tasks = sorted.map((s,i) => {
+    const minutes = i === sorted.length - 1 ? remaining : base;
+    remaining -= minutes;
+    return {id:i, name:s.name, minutes, done:false};
+  });
+  renderPlan();
+}
+
+function renderPlan() {
+  const box = document.getElementById('plan');
+  box.innerHTML = tasks.map((t,i) => `
+    <label class="task ${t.done ? 'done' : ''}">
+      <input type="checkbox" ${t.done ? 'checked' : ''}
+        onchange="toggleTask(${i},this.checked)">
+      <span><strong>${escapeHTML(t.name)}</strong><br>
+      ${t.minutes} minutes · ${subjects.find(s => s.name === t.name)?.mark < 60
+        ? 'High priority: revise basics and solve practice questions'
+        : 'Review notes and complete practice questions'}</span>
+    </label>`).join('');
+  updateProgress();
+}
+
+function toggleTask(i, checked) {
+  tasks[i].done = checked;
+  renderPlan();
+}
+
+function resetTasks() {
+  tasks.forEach(t => t.done = false);
+  renderPlan();
+}
+
+function updateProgress() {
+  const done = tasks.filter(t => t.done).length;
+  const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+  document.getElementById('progress').textContent = pct + '%';
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('taskSummary').textContent = tasks.length
+    ? done + ' of ' + tasks.length + ' tasks completed (' + pct + '%).'
+    : 'No study tasks yet.';
+}
+
+renderSubjects();
+updateProgress();
+</script>
+</body>
+</html>
