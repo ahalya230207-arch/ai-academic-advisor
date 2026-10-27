@@ -7,428 +7,700 @@
 <title>AI Academic Advisor</title>
 <style>
 :root {
-  --bg:#0b1020; --panel:#151d32; --line:#293550;
-  --text:#f4f7ff; --muted:#a5b2cc; --blue:#6d8cff;
-  --green:#43d9a3; --orange:#ffbd80;
+  --bg: #08111f;
+  --panel: #101e32;
+  --text: #eef5ff;
+  --muted: #a9bad2;
+  --blue: #63a8ff;
+  --cyan: #63e0dc;
+  --gold: #f6c667;
+  --green: #73dfaa;
+  --red: #ff8585;
 }
-* { box-sizing:border-box; }
-body { margin:0; font-family:Arial,sans-serif; background:var(--bg); color:var(--text); }
-header {
-  padding:22px 6%; background:#111a2d; border-bottom:1px solid var(--line);
-  display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
 }
-.brand { font-size:22px; font-weight:bold; }
-.brand span { color:var(--blue); }
-header small { color:var(--muted); }
-main { max-width:1150px; margin:auto; padding:28px 18px; }
-h1 { font-size:30px; margin-bottom:8px; }
-h2 { font-size:18px; }
-p { color:var(--muted); line-height:1.6; }
-.tag { display:inline-block; background:#253459; color:#b8c7ff; padding:7px 12px; border-radius:20px; font-size:12px; }
-.grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
-.two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-top:20px; }
-.panel { background:var(--panel); border:1px solid var(--line); border-radius:15px; padding:20px; min-width:0; }
-.metric { font-size:29px; font-weight:bold; margin-top:12px; }
-.metric-label { color:var(--muted); font-size:13px; }
-label { display:block; margin:13px 0 7px; color:#d9e2f5; font-size:13px; }
-input,select {
-  width:100%; padding:12px; border-radius:8px; border:1px solid var(--line);
-  background:#0e1628; color:white; font-size:14px;
+button, input { font: inherit; }
+button {
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 9px;
+  font-weight: bold;
 }
-button { padding:12px 15px; border:0; border-radius:8px; cursor:pointer; background:var(--blue); color:white; font-weight:bold; margin-top:12px; }
-button:hover { filter:brightness(1.12); }
-.secondary { background:#293550; }
-.full { width:100%; }
-.subject { padding:13px 0; border-bottom:1px solid var(--line); }
-.subject-head { display:flex; justify-content:space-between; gap:8px; }
-.bar { height:7px; background:#28344d; border-radius:9px; margin-top:10px; overflow:hidden; }
-.fill { height:100%; background:var(--green); border-radius:9px; transition:width .3s; }
-.weak { color:var(--orange); }
-.good { color:var(--green); }
-.result { margin-top:14px; padding:14px; border-radius:9px; background:#0e1628; line-height:1.7; }
-.task { display:flex; gap:10px; align-items:start; padding:12px 0; border-bottom:1px solid var(--line); }
-.task input { width:auto; margin-top:4px; }
-.task.done span { text-decoration:line-through; color:var(--muted); }
-.notice { font-size:12px; color:var(--muted); }
-footer { text-align:center; padding:25px; color:var(--muted); font-size:12px; }
-@media(max-width:700px) {
-  .grid,.two { grid-template-columns:1fr; }
-  h1 { font-size:25px; }
+.primary { background: var(--blue); color: #08111f; }
+.secondary { background: #203653; color: white; }
+.danger { background: #512b3a; color: white; }
+.app { max-width: 1250px; margin: auto; padding: 22px; }
+header, .row, .heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+header { margin-bottom: 22px; flex-wrap: wrap; }
+h1 { margin: 0; font-size: 27px; }
+h2, h3 { margin-top: 0; }
+.muted { color: var(--muted); }
+.hero, .panel, .stat {
+  background: var(--panel);
+  border: 1px solid #263b58;
+  border-radius: 15px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.hero { background: #142640; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.stat .number { font-size: 27px; font-weight: bold; }
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 12px;
+  background: #091626;
+  color: white;
+  border: 1px solid #334b68;
+  border-radius: 8px;
+}
+label { font-size: 14px; color: var(--muted); }
+.subject, .task, .message {
+  background: #0b192b;
+  border: 1px solid #263b58;
+  padding: 12px;
+  border-radius: 9px;
+  margin-top: 9px;
+}
+.subject {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.low { color: var(--red); }
+.medium { color: var(--gold); }
+.high { color: var(--green); }
+.progress {
+  height: 9px;
+  background: #263b58;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+.progress div {
+  height: 100%;
+  width: 0;
+  background: var(--cyan);
+}
+canvas { width: 100%; height: 240px; display: block; }
+.chat-messages {
+  height: 220px;
+  overflow-y: auto;
+  margin: 12px 0;
+}
+.message { white-space: pre-wrap; overflow-wrap: anywhere; }
+.message.user { background: #205d70; }
+.small { font-size: 12px; color: var(--muted); }
+.actions { display: flex; gap: 7px; flex-wrap: wrap; }
+@media(max-width:800px) {
+  .layout { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:480px) {
+  .app { padding: 12px; }
+  h1 { font-size: 22px; }
+  .subject { flex-wrap: wrap; }
 }
 </style>
 </head>
 <body>
+<div class="app">
 <header>
-  <div class="brand">✦ Academic<span>AI</span></div>
-  <small>PERSONALIZED LEARNING · STUDENT EDITION</small>
+  <div>
+    <div class="muted">STUDENT SUCCESS WORKSPACE</div>
+    <h1>✦ AI Academic Advisor</h1>
+  </div>
+  <div class="actions">
+    <button class="secondary" id="sample">Load sample data</button>
+    <button class="danger" id="clear">Clear all data</button>
+  </div>
 </header>
 
-<main>
-  <span class="tag">AI ACADEMIC ADVISOR · HACKATHON DEMO</span>
-  <h1 id="greeting">Your learning, your plan.</h1>
-  <p>Understand your performance, identify areas to improve, and build a study plan around your needs.</p>
+<section class="hero">
+  <h2 id="greeting">Small steps. Strong results.</h2>
+  <p class="muted">Track marks, plan your study time, and improve your performance.</p>
+</section>
 
-  <section class="grid">
-    <div class="panel"><div class="metric" id="average">—</div><div class="metric-label">Average subject mark</div></div>
-    <div class="panel"><div class="metric" id="strongCount">0</div><div class="metric-label">Subjects at 75% or above</div></div>
-    <div class="panel"><div class="metric" id="progress">0%</div><div class="metric-label">Study tasks completed</div></div>
+<section class="stats">
+  <div class="stat"><div class="muted">Average mark</div><div class="number" id="average">—</div></div>
+  <div class="stat"><div class="muted">Subjects ≥ 75%</div><div class="number" id="strong">0</div></div>
+  <div class="stat"><div class="muted">Tasks complete</div><div class="number" id="completion">0%</div></div>
+  <div class="stat"><div class="muted">Days until exam</div><div class="number" id="days">—</div></div>
+</section>
+
+<div class="layout">
+<div>
+  <section class="panel">
+    <h3>Student profile</h3>
+    <label for="name">Student name</label>
+    <input id="name" placeholder="Enter your name">
+    <label for="hours">Study hours available per day</label>
+    <input id="hours" type="number" min="0.5" max="16" step="0.5" value="3">
+    <label for="attendance">Attendance (%)</label>
+    <input id="attendance" type="number" min="0" max="100" placeholder="e.g. 85">
+    <label for="exam">Next exam date</label>
+    <input id="exam" type="date">
   </section>
 
-  <section class="two">
-    <div class="panel">
-      <h2>01 / Student Profile</h2>
-      <label for="student">Student name</label>
-      <input id="student" placeholder="Enter student name" value="Student">
-      <label for="hours">Available study hours per day</label>
-      <input id="hours" type="number" min="1" max="12" value="3">
-      <label for="attendance">Attendance (%)</label>
-      <input id="attendance" type="number" min="0" max="100" value="85">
-      <label for="exam">Next exam date</label>
-      <input id="exam" type="date">
-      <button class="full" onclick="saveProfile()">Save profile</button>
-      <div id="profileMessage" class="result" hidden></div>
-    </div>
-
-    <div class="panel">
-      <h2>02 / Add Subject Marks</h2>
+  <section class="panel">
+    <h3>Subjects and marks</h3>
+    <form id="subjectForm">
       <label for="subjectName">Subject name</label>
-      <input id="subjectName" placeholder="e.g. Computer Networks">
-      <label for="mark">Mark (0–100)</label>
-      <input id="mark" type="number" min="0" max="100" placeholder="e.g. 55">
-      <button class="full" onclick="addSubject()">Add or update subject</button>
-      <button class="secondary full" onclick="loadSample()">Load sample data</button>
-      <button class="secondary full" onclick="clearData()">Clear all student data</button>
-      <p class="notice">Sample data is fictional. Use it to demonstrate the features.</p>
-    </div>
+      <input id="subjectName" placeholder="e.g. Computer Networks" required>
+      <label for="mark">Mark (%)</label>
+      <input id="mark" type="number" min="0" max="100" placeholder="0–100" required>
+      <button class="primary" type="submit">Add subject</button>
+    </form>
+    <div id="subjects"></div>
   </section>
 
-  <section class="two">
-    <div class="panel">
-      <h2>03 / Performance Analysis</h2>
-      <div id="subjects"><p>Add subjects or load sample data to begin.</p></div>
-      <button class="full" onclick="analyze()">Analyze my performance</button>
-      <div id="analysis" class="result" hidden></div>
-    </div>
+  <section class="panel">
+    <h3>Subject performance chart</h3>
+    <canvas id="marksChart"></canvas>
+    <p class="small">Red: below 50 · Gold: 50–74 · Green: 75–100</p>
+  </section>
+</div>
 
-    <div class="panel">
-      <h2>04 / Adaptive Study Planner</h2>
-      <p>Study time is allocated with more time for subjects with lower marks.</p>
-      <button class="full" onclick="generatePlan()">Generate my study plan</button>
-      <div id="plan"><p>Your personalized plan will appear here.</p></div>
-      <button class="secondary full" onclick="resetTasks()">Reset task completion</button>
+<div>
+  <section class="panel">
+    <h3>Adaptive study planner</h3>
+    <p class="muted" id="planSummary">Add subjects to create a study plan.</p>
+    <div class="actions">
+      <button class="primary" id="generate">Generate / update plan</button>
+      <button class="secondary" id="reset">Reset task checks</button>
     </div>
+    <div class="progress"><div id="bar"></div></div>
+    <p class="small" id="taskCount">No tasks yet.</p>
+    <div id="tasks"></div>
   </section>
 
-  <section class="panel" style="margin-top:20px">
-    <h2>05 / Progress Tracker</h2>
-    <div class="bar"><div class="fill" id="progressBar" style="width:0%"></div></div>
-    <div id="taskSummary" class="metric-label" style="margin-top:10px">No study tasks yet.</div>
-    <p class="notice">Your data is stored in this browser on this device. It is not shared between users or devices.</p>
+  <section class="panel">
+    <h3>Study task progress chart</h3>
+    <canvas id="progressChart"></canvas>
   </section>
-</main>
 
-<footer>AI Academic Advisor · Student Project Prototype · Recommendations are educational guidance, not official academic assessments.</footer>
+  <section class="panel">
+    <h3>Demo AI advisor chat</h3>
+    <p class="small">Ask about study priorities, exams, marks, or time management.</p>
+    <div class="chat-messages" id="messages">
+      <div class="message">Hello! Ask me which subject to study first.</div>
+    </div>
+    <form id="chatForm">
+      <label for="question">Your question</label>
+      <input id="question" placeholder="Which subject should I study first?" required>
+      <button class="primary" type="submit">Ask advisor</button>
+    </form>
+    <p class="small">This is a rule-based demo, not a live AI model.</p>
+  </section>
+
+  <section class="panel">
+    <h3>Quick advice</h3>
+    <div id="advice" class="muted">Add subjects to receive advice.</div>
+  </section>
+</div>
+</div>
+<p class="small" style="text-align:center">AI Academic Advisor · Data saved in this browser using localStorage</p>
+</div>
 
 <script>
-const STORAGE_KEY = 'academicAdvisorDataV2';
-let subjects = [];
-let tasks = [];
+"use strict";
 
-function el(id) { return document.getElementById(id); }
+const $ = id => document.getElementById(id);
+const KEY = "academicAdvisorCompleteV1";
+
+let data = {
+  profile: { name: "", hours: 3, attendance: "", exam: "" },
+  subjects: [],
+  tasks: []
+};
+
+function id() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
 
 function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  })[c]);
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[char]);
 }
 
-function saveData() {
+function save() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      subjects, tasks,
-      student:el('student').value,
-      hours:el('hours').value,
-      attendance:el('attendance').value,
-      exam:el('exam').value
-    }));
-  } catch (e) {
-    console.error('Unable to save data in this browser.', e);
+    localStorage.setItem(KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error("Unable to save data", error);
   }
 }
 
-function loadData() {
+function load() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    if (Array.isArray(data.subjects)) {
-      subjects = data.subjects.filter(s =>
-        s && typeof s.name === 'string' &&
-        Number.isFinite(Number(s.mark)) &&
-        Number(s.mark) >= 0 && Number(s.mark) <= 100
-      ).map(s => ({name:s.name, mark:Number(s.mark)}));
+    const saved = JSON.parse(localStorage.getItem(KEY));
+    if (saved) {
+      data.profile = { ...data.profile, ...(saved.profile || {}) };
+      data.subjects = Array.isArray(saved.subjects) ? saved.subjects : [];
+      data.tasks = Array.isArray(saved.tasks) ? saved.tasks : [];
     }
-    if (Array.isArray(data.tasks)) {
-      tasks = data.tasks.filter(t =>
-        t && typeof t.name === 'string' &&
-        Number.isFinite(Number(t.minutes)) && Number(t.minutes) >= 0
-      ).map(t => ({
-        name:t.name, minutes:Number(t.minutes), done:Boolean(t.done)
-      }));
-    }
-    el('student').value = data.student || 'Student';
-    el('hours').value = data.hours || 3;
-    el('attendance').value = data.attendance ?? 85;
-    el('exam').value = data.exam || '';
-    el('greeting').textContent = 'Your learning, ' + el('student').value + '.';
-  } catch (e) {
-    console.error('Saved data could not be read.', e);
-  }
-}
-
-function saveProfile() {
-  const name = el('student').value.trim() || 'Student';
-  const hours = Number(el('hours').value);
-  const attendanceText = el('attendance').value;
-  const attendance = Number(attendanceText);
-
-  if (el('hours').value === '' || !Number.isFinite(hours) || hours < 1 || hours > 12) {
-    alert('Enter study time between 1 and 12 hours.');
-    return;
-  }
-  if (attendanceText === '' || !Number.isFinite(attendance) || attendance < 0 || attendance > 100) {
-    alert('Enter attendance between 0 and 100.');
-    return;
+  } catch (error) {
+    console.error("Unable to load data", error);
   }
 
-  el('student').value = name;
-  el('greeting').textContent = 'Your learning, ' + name + '.';
-  const box = el('profileMessage');
-  box.hidden = false;
-  const exam = el('exam').value;
-  const days = exam ? Math.ceil((new Date(exam + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000) : null;
-  box.textContent = 'Profile saved. Attendance: ' + attendance + '%.' +
-    (days === null ? '' : days < 0 ? ' The exam date is in the past.' :
-      days === 0 ? ' Your exam is today!' : ' Days until exam: ' + days + '.');
-  saveData();
+  $("name").value = data.profile.name || "";
+  $("hours").value = data.profile.hours || 3;
+  $("attendance").value = data.profile.attendance ?? "";
+  $("exam").value = data.profile.exam || "";
 }
 
-function addSubject() {
-  const name = el('subjectName').value.trim();
-  const markText = el('mark').value;
-  const mark = Number(markText);
-
-  if (!name || markText === '' || !Number.isFinite(mark) || mark < 0 || mark > 100) {
-    alert('Enter a subject name and a mark between 0 and 100.');
-    return;
-  }
-
-  const existing = subjects.find(s => s.name.toLowerCase() === name.toLowerCase());
-  if (existing) existing.mark = mark;
-  else subjects.push({name, mark});
-
-  el('subjectName').value = '';
-  el('mark').value = '';
-  renderSubjects();
-  el('analysis').hidden = true;
-  saveData();
+function average() {
+  if (!data.subjects.length) return null;
+  return data.subjects.reduce((sum, subject) => sum + subject.mark, 0) /
+    data.subjects.length;
 }
 
-function loadSample() {
-  subjects = [
-    {name:'Computer Networks', mark:48},
-    {name:'Big Data Analytics', mark:62},
-    {name:'Database Management', mark:82},
-    {name:'Java Programming', mark:71}
-  ];
-  tasks = [];
-  el('student').value = 'Ahalya Demo';
-  el('hours').value = 3;
-  el('attendance').value = 85;
-  el('exam').value = '2026-11-15';
-  el('greeting').textContent = 'Your learning, Ahalya Demo.';
-  el('analysis').hidden = true;
-  el('profileMessage').hidden = true;
-  el('plan').innerHTML = '<p>Sample data loaded. Generate your study plan.</p>';
-  renderSubjects();
-  updateProgress();
-  saveData();
-}
-
-function clearData() {
-  if (!confirm('Clear the saved profile, subjects, and study tasks on this browser?')) return;
-  subjects = [];
-  tasks = [];
-  localStorage.removeItem(STORAGE_KEY);
-  el('student').value = 'Student';
-  el('hours').value = 3;
-  el('attendance').value = 85;
-  el('exam').value = '';
-  el('greeting').textContent = 'Your learning, your plan.';
-  el('analysis').hidden = true;
-  el('profileMessage').hidden = true;
-  el('plan').innerHTML = '<p>Your personalized plan will appear here.</p>';
-  renderSubjects();
-  updateProgress();
+function daysUntilExam() {
+  if (!data.profile.exam) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const examDate = new Date(data.profile.exam + "T00:00:00");
+  if (Number.isNaN(examDate.getTime())) return null;
+  return Math.ceil((examDate - today) / 86400000);
 }
 
 function renderSubjects() {
-  const box = el('subjects');
-  if (!subjects.length) {
-    box.innerHTML = '<p>Add subjects or load sample data to begin.</p>';
-    updateMetrics();
+  const root = $("subjects");
+
+  if (!data.subjects.length) {
+    root.innerHTML = '<p class="muted">No subjects yet. Add a subject or load sample data.</p>';
     return;
   }
 
-  box.innerHTML = subjects.map((s,i) => `
-    <div class="subject">
-      <div class="subject-head">
-        <strong>${escapeHTML(s.name)}</strong>
-        <span class="${s.mark < 60 ? 'weak' : 'good'}">${s.mark}%</span>
+  root.innerHTML = data.subjects.map(subject => {
+    const status = subject.mark < 50 ? "low" :
+      subject.mark < 75 ? "medium" : "high";
+
+    return `<div class="subject">
+      <div>
+        <strong>${escapeHTML(subject.name)}</strong>
+        <div class="${status}">${subject.mark}%</div>
       </div>
-      <div class="bar"><div class="fill" style="width:${s.mark}%"></div></div>
-      <button class="secondary" onclick="removeSubject(${i})">Remove</button>
-    </div>`).join('');
-  updateMetrics();
+      <button class="danger" data-delete="${escapeHTML(subject.id)}">Delete</button>
+    </div>`;
+  }).join("");
+
+  root.querySelectorAll("[data-delete]").forEach(button => {
+    button.addEventListener("click", () => {
+      const subject = data.subjects.find(s => s.id === button.dataset.delete);
+      if (!subject) return;
+      if (!confirm("Delete " + subject.name + " and its study tasks?")) return;
+
+      data.subjects = data.subjects.filter(s => s.id !== subject.id);
+      data.tasks = data.tasks.filter(t => t.subject !== subject.name);
+      save();
+      renderAll();
+    });
+  });
 }
 
-function removeSubject(i) {
-  subjects.splice(i,1);
-  renderSubjects();
-  el('analysis').hidden = true;
-  saveData();
-}
+$("subjectForm").addEventListener("submit", event => {
+  event.preventDefault();
 
-function updateMetrics() {
-  const avg = subjects.length
-    ? subjects.reduce((sum,s) => sum + s.mark,0) / subjects.length : null;
-  el('average').textContent = avg === null ? '—' : avg.toFixed(2) + '%';
-  el('strongCount').textContent = subjects.filter(s => s.mark >= 75).length;
-}
+  const name = $("subjectName").value.trim();
+  const mark = Number($("mark").value);
 
-function analyze() {
-  if (!subjects.length) {
-    alert('Add subjects or load sample data first.');
+  if (!name || !Number.isFinite(mark) || mark < 0 || mark > 100) {
+    alert("Enter a subject name and a mark from 0 to 100.");
     return;
   }
 
-  const sorted = [...subjects].sort((a,b) => a.mark - b.mark);
-  const weak = sorted.filter(s => s.mark < 60);
-  const attendance = Number(el('attendance').value);
-  const exam = el('exam').value;
-  let deadlineText = '';
+  const existing = data.subjects.find(
+    s => s.name.toLowerCase() === name.toLowerCase()
+  );
 
-  if (exam) {
-    const days = Math.ceil((new Date(exam + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000);
-    deadlineText = days < 0 ? '<br>The entered exam date has passed.' :
-      days === 0 ? '<br>Your exam is today. Prioritize revision and rest.' :
-      '<br>Days until exam: ' + days + '.';
+  if (existing) {
+    existing.name = name;
+    existing.mark = mark;
+  } else {
+    data.subjects.push({ id: id(), name, mark });
   }
 
-  const box = el('analysis');
-  box.hidden = false;
-  box.innerHTML = '<strong>Advisor findings</strong><br>' +
-    (weak.length
-      ? 'Priority subjects: ' + weak.map(s => escapeHTML(s.name)).join(', ') + '.'
-      : 'No subjects are below 60%. Focus on your lowest-scoring subjects to improve further.') +
-    '<br>Attendance: ' + (Number.isFinite(attendance) && attendance >= 0 && attendance <= 100 ? attendance + '%' : 'Not entered') +
-    (attendance < 75 ? ' — review your institution’s attendance requirements.' : '.') +
-    deadlineText +
-    '<br><br><strong>Suggested action:</strong> Review difficult concepts, solve practice questions, and take a short self-test.' +
-    '<br><small>These findings are generated from entered data using transparent rules, not an external AI model.</small>';
-}
+  $("subjectForm").reset();
+  save();
+  renderAll();
+});
 
 function generatePlan() {
-  if (!subjects.length) {
-    alert('Add subjects or load sample data first.');
+  if (!data.subjects.length) {
+    alert("Please add a subject first.");
     return;
   }
 
-  const hoursText = el('hours').value;
-  const hours = Number(hoursText);
-  if (hoursText === '' || !Number.isFinite(hours) || hours < 1 || hours > 12) {
-    alert('Enter study time between 1 and 12 hours.');
-    return;
-  }
+  const hours = Math.min(16, Math.max(0.5, Number(data.profile.hours) || 3));
+  const totalMinutes = Math.round(hours * 60);
+  const sorted = [...data.subjects].sort((a, b) => a.mark - b.mark);
+  const weightTotal = sorted.reduce((sum, s) => sum + (101 - s.mark), 0);
 
-  const sorted = [...subjects].sort((a,b) => a.mark - b.mark);
-  const totalMinutes = hours * 60;
-  const weights = sorted.map(s => Math.max(10, 100 - s.mark));
-  const weightTotal = weights.reduce((sum,w) => sum + w,0);
-  let allocated = 0;
+  data.tasks = sorted.map(subject => {
+    const oldTask = data.tasks.find(t => t.subject === subject.name);
+    const minutes = Math.max(
+      10,
+      Math.round((totalMinutes * (101 - subject.mark) / weightTotal) / 5) * 5
+    );
 
-  tasks = sorted.map((s,i) => {
-    const minutes = i === sorted.length - 1
-      ? totalMinutes - allocated
-      : Math.floor(totalMinutes * weights[i] / weightTotal);
-    allocated += minutes;
     return {
-      name:s.name,
+      id: id(),
+      subject: subject.name,
+      title: subject.mark < 50 ? "Review basic concepts" :
+        subject.mark < 75 ? "Revise weak topics" : "Practice and revise",
       minutes,
-      done:false
+      done: oldTask ? oldTask.done : false
     };
   });
 
-  renderPlan();
-  saveData();
+  save();
+  renderAll();
 }
 
-function renderPlan() {
-  const box = el('plan');
-  if (!tasks.length) {
-    box.innerHTML = '<p>Your personalized plan will appear here.</p>';
-    updateProgress();
+function renderTasks() {
+  const root = $("tasks");
+
+  if (!data.tasks.length) {
+    root.innerHTML = '<p class="muted">Click Generate / update plan to create your tasks.</p>';
+  } else {
+    root.innerHTML = data.tasks.map(task => `
+      <div class="task">
+        <label>
+          <input type="checkbox" data-task="${escapeHTML(task.id)}"
+            ${task.done ? "checked" : ""} style="width:auto;margin-right:8px">
+          <strong style="${task.done ? "text-decoration:line-through" : ""}">
+            ${escapeHTML(task.title)}
+          </strong>
+        </label>
+        <div>${escapeHTML(task.subject)} · ${task.minutes} minutes</div>
+      </div>
+    `).join("");
+  }
+
+  root.querySelectorAll("[data-task]").forEach(box => {
+    box.addEventListener("change", () => {
+      const task = data.tasks.find(t => t.id === box.dataset.task);
+      if (task) task.done = box.checked;
+      save();
+      renderAll();
+    });
+  });
+}
+
+function renderAdvice() {
+  if (!data.subjects.length) {
+    $("advice").textContent = "Add subjects to receive advice.";
     return;
   }
 
-  box.innerHTML = tasks.map((t,i) => {
-    const subject = subjects.find(s => s.name === t.name);
-    const advice = subject && subject.mark < 60
-      ? 'High priority: revise basics and solve practice questions.'
-      : 'Review notes and complete practice questions.';
-    return `
-      <label class="task ${t.done ? 'done' : ''}">
-        <input type="checkbox" ${t.done ? 'checked' : ''}
-          onchange="toggleTask(${i},this.checked)">
-        <span><strong>${escapeHTML(t.name)}</strong><br>
-        ${t.minutes} minutes · ${advice}</span>
-      </label>`;
-  }).join('');
+  const weakest = [...data.subjects].sort((a, b) => a.mark - b.mark)[0];
+  let advice = `Prioritise ${weakest.name} (${weakest.mark}%).`;
 
-  updateProgress();
+  if (weakest.mark < 50) {
+    advice += " Review the basics and solve practice questions.";
+  } else if (weakest.mark < 75) {
+    advice += " Revise weak topics and practise past questions.";
+  } else {
+    advice += " Keep revising and practise under timed conditions.";
+  }
+
+  if (data.profile.attendance !== "" &&
+      Number(data.profile.attendance) < 75) {
+    advice += " Check your college attendance requirements.";
+  }
+
+  $("advice").textContent = advice;
 }
 
-function toggleTask(i,checked) {
-  if (!tasks[i]) return;
-  tasks[i].done = checked;
-  renderPlan();
-  saveData();
+function renderDashboard() {
+  const avg = average();
+  const days = daysUntilExam();
+  const done = data.tasks.filter(t => t.done).length;
+  const percent = data.tasks.length ?
+    Math.round(done / data.tasks.length * 100) : 0;
+
+  $("average").textContent = avg === null ? "—" : avg.toFixed(1) + "%";
+  $("strong").textContent = data.subjects.filter(s => s.mark >= 75).length;
+  $("completion").textContent = percent + "%";
+  $("days").textContent = days === null ? "—" : days < 0 ? "Passed" : days;
+
+  $("greeting").textContent = data.profile.name
+    ? "Welcome back, " + data.profile.name + "!"
+    : "Small steps. Strong results.";
+
+  $("bar").style.width = percent + "%";
+  $("taskCount").textContent =
+    `${done} of ${data.tasks.length} tasks completed (${percent}%).`;
+
+  const weakest = [...data.subjects].sort((a, b) => a.mark - b.mark)[0];
+  $("planSummary").textContent = weakest
+    ? `Study time: ${data.profile.hours} hours/day. Priority: ${weakest.name}. Lower-scoring subjects receive more time.`
+    : "Add subjects to create a study plan.";
 }
 
-function resetTasks() {
-  tasks.forEach(t => t.done = false);
-  renderPlan();
-  saveData();
+function drawMarksChart() {
+  const canvas = $("marksChart");
+  const ctx = canvas.getContext("2d");
+  const width = canvas.clientWidth || 300;
+  const height = 240;
+  const ratio = window.devicePixelRatio || 1;
+
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const left = 32, right = 10, top = 18, bottom = 55;
+  const chartHeight = height - top - bottom;
+  const chartWidth = width - left - right;
+
+  ctx.font = "11px Arial";
+  ctx.textAlign = "right";
+
+  [0, 25, 50, 75, 100].forEach(value => {
+    const y = top + chartHeight * (1 - value / 100);
+    ctx.strokeStyle = "#263b58";
+    ctx.beginPath();
+    ctx.moveTo(left, y);
+    ctx.lineTo(width - right, y);
+    ctx.stroke();
+    ctx.fillStyle = "#a9bad2";
+    ctx.fillText(value, left - 5, y + 4);
+  });
+
+  if (!data.subjects.length) {
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#a9bad2";
+    ctx.fillText("Add subjects to see your chart", width / 2, height / 2);
+    return;
+  }
+
+  const slot = chartWidth / data.subjects.length;
+  const barWidth = Math.min(38, slot * 0.6);
+
+  data.subjects.forEach((subject, index) => {
+    const x = left + index * slot + (slot - barWidth) / 2;
+    const barHeight = chartHeight * subject.mark / 100;
+    const y = top + chartHeight - barHeight;
+
+    ctx.fillStyle = subject.mark < 50 ? "#ff8585" :
+      subject.mark < 75 ? "#f6c667" : "#73dfaa";
+    ctx.fillRect(x, y, barWidth, barHeight);
+
+    ctx.fillStyle = "#eef5ff";
+    ctx.textAlign = "center";
+    ctx.fillText(subject.mark + "%", x + barWidth / 2, Math.max(12, y - 5));
+
+    ctx.save();
+    ctx.translate(x + barWidth / 2, top + chartHeight + 14);
+    ctx.rotate(-0.35);
+    ctx.fillStyle = "#a9bad2";
+    let label = subject.name.length > 13
+      ? subject.name.slice(0, 12) + "…" : subject.name;
+    ctx.fillText(label, 0, 0);
+    ctx.restore();
+  });
 }
 
-function updateProgress() {
-  const done = tasks.filter(t => t.done).length;
-  const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
-  el('progress').textContent = pct + '%';
-  el('progressBar').style.width = pct + '%';
-  el('taskSummary').textContent = tasks.length
-    ? done + ' of ' + tasks.length + ' tasks completed (' + pct + '%).'
-    : 'No study tasks yet.';
+function drawProgressChart() {
+  const canvas = $("progressChart");
+  const ctx = canvas.getContext("2d");
+  const width = canvas.clientWidth || 300;
+  const height = 240;
+  const ratio = window.devicePixelRatio || 1;
+
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const done = data.tasks.filter(t => t.done).length;
+  const total = data.tasks.length;
+  const percent = total ? done / total : 0;
+  const radius = Math.min(72, width * 0.22);
+  const cx = width / 2, cy = height / 2;
+
+  ctx.lineWidth = 20;
+  ctx.strokeStyle = "#263b58";
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  if (total) {
+    ctx.strokeStyle = "#63e0dc";
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, -Math.PI / 2,
+      -Math.PI / 2 + percent * Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#eef5ff";
+  ctx.textAlign = "center";
+  ctx.font = "bold 24px Arial";
+  ctx.fillText(Math.round(percent * 100) + "%", cx, cy);
+  ctx.font = "12px Arial";
+  ctx.fillStyle = "#a9bad2";
+  ctx.fillText(`${done} of ${total} tasks`, cx, cy + 22);
 }
 
-['student','hours','attendance','exam'].forEach(id => {
-  el(id).addEventListener('change',saveData);
+function renderAll() {
+  renderSubjects();
+  renderTasks();
+  renderDashboard();
+  renderAdvice();
+  drawMarksChart();
+  drawProgressChart();
+}
+
+function reply(question) {
+  const q = question.toLowerCase();
+  const weakest = [...data.subjects].sort((a, b) => a.mark - b.mark)[0];
+  const avg = average();
+
+  if (/hello|^hi\b|hey/.test(q)) {
+    return "Hello! I can help with study priorities, exam preparation, marks, and time management.";
+  }
+
+  if (/which subject|priority|first|weakest|focus/.test(q)) {
+    if (!weakest) return "Add your subjects and marks first.";
+    return `Start with ${weakest.name}, currently at ${weakest.mark}%. Review one difficult concept, solve 3–5 practice questions, and write down what you still need to learn.`;
+  }
+
+  if (/exam|revision|test|tomorrow/.test(q)) {
+    const days = daysUntilExam();
+    const timing = days === null ? "your exam date is not set"
+      : days === 0 ? "your exam is today"
+      : days < 0 ? "the saved exam date has passed"
+      : `your exam is in ${days} days`;
+
+    return `Since ${timing}, revise summaries, practise questions without notes, review mistakes, and make time for sleep. ${weakest ? "Give extra attention to " + weakest.name + "." : "Add subjects for more specific advice."}`;
+  }
+
+  if (/time|schedule|manage|hours|routine/.test(q)) {
+    return `You have ${data.profile.hours} study hours per day. Try 25–30 minute focused sessions with short breaks. Start with your lowest-mark subject and reserve the last 10 minutes for reviewing what you learned.`;
+  }
+
+  if (/low|improve|marks|score|fail/.test(q)) {
+    if (!weakest) return "Add your subject marks first, and I can help you choose a priority.";
+    return `Start with ${weakest.name} (${weakest.mark}%). Choose two weak topics, learn one at a time, practise questions, and review mistakes the next day. ${avg !== null ? "Your current average is " + avg.toFixed(1) + "%." : ""}`;
+  }
+
+  if (/average|overall|performance|progress/.test(q)) {
+    return avg === null ? "Add subjects and marks to see your performance."
+      : `Your average mark is ${avg.toFixed(1)}% across ${data.subjects.length} subjects. ${weakest ? "Your lowest subject is " + weakest.name + " at " + weakest.mark + "%." : ""}`;
+  }
+
+  return "Try asking: “Which subject should I study first?”, “Help me prepare for my exam”, or “How can I manage my time?”";
+}
+
+$("chatForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const question = $("question").value.trim();
+  if (!question) return;
+
+  const messages = $("messages");
+  const user = document.createElement("div");
+  user.className = "message user";
+  user.textContent = question;
+  messages.appendChild(user);
+
+  const answer = document.createElement("div");
+  answer.className = "message";
+  answer.textContent = reply(question);
+  messages.appendChild(answer);
+
+  messages.scrollTop = messages.scrollHeight;
+  $("question").value = "";
 });
 
-loadData();
-renderSubjects();
-renderPlan();
-updateProgress();
+["name", "hours", "attendance", "exam"].forEach(field => {
+  $(field).addEventListener("input", () => {
+    if (field === "name") data.profile.name = $("name").value.slice(0, 100);
+    if (field === "hours") data.profile.hours =
+      Math.min(16, Math.max(0.5, Number($("hours").value) || 3));
+    if (field === "attendance") data.profile.attendance = $("attendance").value;
+    if (field === "exam") data.profile.exam = $("exam").value;
+    save();
+    renderAll();
+  });
+});
+
+$("generate").addEventListener("click", generatePlan);
+
+$("reset").addEventListener("click", () => {
+  data.tasks.forEach(task => task.done = false);
+  save();
+  renderAll();
+});
+
+$("sample").addEventListener("click", () => {
+  if (data.subjects.length &&
+      !confirm("Replace your current subjects with sample data?")) return;
+
+  data.subjects = [
+    { id: id(), name: "Computer Networks", mark: 48 },
+    { id: id(), name: "Big Data Analytics", mark: 62 },
+    { id: id(), name: "Database Management", mark: 82 },
+    { id: id(), name: "Java Programming", mark: 71 }
+  ];
+  data.tasks = [];
+  if (!data.profile.name) data.profile.name = "Student";
+  $("name").value = data.profile.name;
+  save();
+  generatePlan();
+});
+
+$("clear").addEventListener("click", () => {
+  if (!confirm("Clear all saved profile details, subjects, and tasks?")) return;
+
+  data = {
+    profile: { name: "", hours: 3, attendance: "", exam: "" },
+    subjects: [],
+    tasks: []
+  };
+
+  localStorage.removeItem(KEY);
+  $("name").value = "";
+  $("hours").value = 3;
+  $("attendance").value = "";
+  $("exam").value = "";
+  $("messages").innerHTML =
+    '<div class="message">Hello! Ask me which subject to study first.</div>';
+  save();
+  renderAll();
+});
+
+load();
+renderAll();
+window.addEventListener("resize", () => {
+  drawMarksChart();
+  drawProgressChart();
+});
 </script>
 </body>
 </html>
