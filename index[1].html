@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Academic Advisor</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--primary:#4f46e5;--line:#e5e7eb;--good:#15803d;--warn:#b45309;--bad:#b91c1c}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#111827;color:white;padding:22px max(20px,calc((100% - 1100px)/2))}
+header h1{margin:0 0 6px;font-size:25px}header p{margin:0;color:#d1d5db}
+main{max-width:1100px;margin:22px auto;padding:0 16px 40px}
+.status{padding:12px 14px;border-radius:10px;background:#eef2ff;border:1px solid #c7d2fe;margin-bottom:18px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--card);padding:18px;border:1px solid var(--line);border-radius:14px;box-shadow:0 3px 12px #11182708}
+.card h2{font-size:18px;margin:0 0 14px}.full{grid-column:1/-1}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;background:white}
+textarea{min-height:78px;resize:vertical}
+button{border:0;border-radius:8px;background:var(--primary);color:white;padding:10px 14px;font-weight:700;cursor:pointer;margin-top:12px}
+button.secondary{background:#374151}button.light{background:#e0e7ff;color:#3730a3}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.metric{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric strong{display:block;font-size:24px;margin-top:5px}.muted{color:var(--muted);font-size:13px}
+.result{white-space:pre-wrap;line-height:1.5;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:13px;min-height:50px}
+ul{padding-left:20px;line-height:1.6}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.metrics{grid-template-columns:1fr}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>AI Academic Advisor</h1>
+  <p>Student progress • Study planning • Academic risk insights</p>
+</header>
+<main>
+  <div id="connectionStatus" class="status">Checking backend connection…</div>
+  <section class="grid">
+    <div class="card">
+      <h2>Student profile</h2>
+      <label for="studentName">Name or student nickname</label>
+      <input id="studentName" placeholder="e.g., Student A" value="Student">
+      <div class="row">
+        <div><label for="subjectsTotal">Total subjects</label><input id="subjectsTotal" type="number" min="1" max="30" value="6"></div>
+        <div><label for="subjectsDone">Subjects completed</label><input id="subjectsDone" type="number" min="0" max="30" value="2"></div>
+      </div>
+      <div class="row">
+        <div><label for="plannedHours">Planned study hours (this week)</label><input id="plannedHours" type="number" min="0" max="168" step="0.5" value="12"></div>
+        <div><label for="actualHours">Actual study hours (this week)</label><input id="actualHours" type="number" min="0" max="168" step="0.5" value="8"></div>
+      </div>
+      <div class="row">
+        <div><label for="averageMark">Average mark (%)</label><input id="averageMark" type="number" min="0" max="100" value="65"></div>
+        <div><label for="confidence">Confidence (1–5)</label><select id="confidence"><option value="1">1 - Very low</option><option value="2">2 - Low</option><option value="3" selected>3 - Medium</option><option value="4">4 - High</option><option value="5">5 - Very high</option></select></div>
+      </div>
+      <label for="examDays">Days until next exam</label><input id="examDays" type="number" min="0" max="365" value="14">
+      <label for="pendingTopics">Pending topics (one per line)</label><textarea id="pendingTopics" placeholder="Example: Unit 3 - Routing&#10;Unit 4 - IPv6">Unit 3 revision
+Unit 4 practice</textarea>
+      <button id="analyzeBtn">Analyze my progress</button>
+      <button id="saveBtn" class="secondary">Save in this browser</button>
+    </div>
+    <div class="card">
+      <h2>Dashboard</h2>
+      <div class="metrics">
+        <div class="metric"><span class="muted">Syllabus completed</span><strong id="completionMetric">—</strong></div>
+        <div class="metric"><span class="muted">Study time achieved</span><strong id="timeMetric">—</strong></div>
+        <div class="metric"><span class="muted">Academic risk</span><strong id="riskMetric">—</strong></div>
+      </div>
+      <h2 style="margin-top:20px">Advisor result</h2>
+      <div id="analysisResult" class="result">Enter your details and select “Analyze my progress”.</div>
+      <h2 style="margin-top:20px">Suggested study plan</h2>
+      <div id="planResult" class="result">Your suggested plan will appear here.</div>
+    </div>
+    <div class="card full">
+      <h2>Ask the advisor</h2>
+      <label for="question">Your question</label>
+      <input id="question" placeholder="e.g., How should I prepare for an exam in 5 days?">
+      <button id="askBtn">Ask advisor</button>
+      <div id="chatResult" class="result" style="margin-top:12px">The advisor uses a rule-based response algorithm. It is a prototype, not a trained AI model.</div>
+    </div>
+    <div class="card full">
+      <h2>How this works</h2>
+      <ul>
+        <li>Frontend collects your progress and sends it to the Python backend.</li>
+        <li>FastAPI validates the inputs and runs the academic risk and study-plan algorithm.</li>
+        <li>The backend returns JSON results; JavaScript updates the dashboard.</li>
+        <li>“Save in this browser” stores your entries in localStorage on this device/browser only.</li>
+      </ul>
+      <p class="muted">Privacy note: do not enter passwords, government IDs, or sensitive personal information. Browser storage is not a cloud database.</p>
+    </div>
+  </section>
+  <footer>AI Academic Advisor • Student project prototype • Rule-based recommendations, not medical or guaranteed academic predictions.</footer>
+</main>
+<script>
+/*
+  IMPORTANT:
+  After deploying backend, replace the URL below with your actual backend URL.
+  Example: https://your-app-name.onrender.com
+*/
+const API_BASE_URL = "https://YOUR-BACKEND-NAME.onrender.com";
+const $ = id => document.getElementById(id);
+
+function formData(){
+  return {
+    student_name: $("studentName").value.trim() || "Student",
+    total_subjects: Number($("subjectsTotal").value),
+    completed_subjects: Number($("subjectsDone").value),
+    planned_hours: Number($("plannedHours").value),
+    actual_hours: Number($("actualHours").value),
+    average_mark: Number($("averageMark").value),
+    confidence: Number($("confidence").value),
+    exam_days: Number($("examDays").value),
+    pending_topics: $("pendingTopics").value.split("\n").map(x=>x.trim()).filter(Boolean)
+  };
+}
+function validate(data){
+  if(!Number.isFinite(data.total_subjects)||data.total_subjects<1) return "Total subjects must be at least 1.";
+  if(data.completed_subjects<0||data.completed_subjects>data.total_subjects) return "Completed subjects must be between 0 and total subjects.";
+  if(data.planned_hours<0||data.actual_hours<0||data.planned_hours>168||data.actual_hours>168) return "Study hours must be between 0 and 168.";
+  if(data.average_mark<0||data.average_mark>100) return "Average mark must be between 0 and 100.";
+  if(data.confidence<1||data.confidence>5) return "Confidence must be between 1 and 5.";
+  if(data.exam_days<0) return "Days until exam cannot be negative.";
+  return "";
+}
+async function api(path, body){
+  const base = API_BASE_URL.replace(/\/+$/,"");
+  if(base.includes("YOUR-BACKEND-NAME")) throw new Error("Backend URL not configured. Deploy the backend, then replace API_BASE_URL in index.html.");
+  const options = body ? {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)} : {};
+  const response = await fetch(base + path, options);
+  let data;
+  try{data=await response.json()}catch{throw new Error("Backend returned an unreadable response.");}
+  if(!response.ok) throw new Error(data.detail || "Backend request failed.");
+  return data;
+}
+async function checkBackend(){
+  try{
+    const data=await api("/health");
+    $("connectionStatus").textContent="Backend connected ✓  "+data.message;
+    $("connectionStatus").style.background="#ecfdf3";
+    $("connectionStatus").style.borderColor="#86efac";
+  }catch(e){
+    $("connectionStatus").textContent="Backend not connected yet: "+e.message;
+    $("connectionStatus").style.background="#fff7ed";
+    $("connectionStatus").style.borderColor="#fdba74";
+  }
+}
+function showError(target,error){$(target).textContent="Could not complete request: "+error.message;}
+$("analyzeBtn").addEventListener("click", async()=>{
+  const data=formData(), problem=validate(data);
+  if(problem){$("analysisResult").textContent=problem;return;}
+  $("analysisResult").textContent="Analyzing…";
+  try{
+    const r=await api("/api/analyze",data);
+    $("completionMetric").textContent=r.syllabus_completion+"%";
+    $("timeMetric").textContent=r.study_time_achievement+"%";
+    $("riskMetric").textContent=r.risk_level;
+    $("analysisResult").textContent=`Student: ${r.student_name}\nRisk score: ${r.risk_score}/100 (${r.risk_level})\nSummary: ${r.summary}\n\nRecommendations:\n• ${r.recommendations.join("\n• ")}`;
+    $("planResult").textContent=r.study_plan.map((x,i)=>`${i+1}. ${x}`).join("\n");
+  }catch(e){showError("analysisResult",e);}
+});
+$("askBtn").addEventListener("click",async()=>{
+  const question=$("question").value.trim();
+  if(!question){$("chatResult").textContent="Please type a question first.";return;}
+  $("chatResult").textContent="Thinking…";
+  try{
+    const r=await api("/api/advice",{question,student:formData()});
+    $("chatResult").textContent=r.answer;
+  }catch(e){showError("chatResult",e);}
+});
+$("saveBtn").addEventListener("click",()=>{
+  try{localStorage.setItem("academicAdvisorData",JSON.stringify(formData()));$("connectionStatus").textContent="Saved in this browser ✓";}catch(e){$("connectionStatus").textContent="Could not save in this browser: "+e.message;}
+});
+function loadSaved(){
+  try{
+    const raw=localStorage.getItem("academicAdvisorData");if(!raw)return;
+    const d=JSON.parse(raw);
+    const map={studentName:"student_name",subjectsTotal:"total_subjects",subjectsDone:"completed_subjects",plannedHours:"planned_hours",actualHours:"actual_hours",averageMark:"average_mark",confidence:"confidence",examDays:"exam_days"};
+    Object.entries(map).forEach(([id,key])=>{if(d[key]!==undefined)$(id).value=d[key];});
+    if(Array.isArray(d.pending_topics))$("pendingTopics").value=d.pending_topics.join("\n");
+  }catch(e){console.warn("Saved browser data could not be loaded.");}
+}
+loadSaved();checkBackend();
+</script>
+</body>
+</html>
